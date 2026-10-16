@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #243247;
+            line-height: 1.5;
+        }
+
+        header {
+            background: #173b70;
+            color: white;
+            padding: 28px 24px;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #dbe7f8;
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            margin-bottom: 24px;
+        }
+
+        .intro h2 {
+            font-size: 25px;
+            margin: 0 0 6px;
+        }
+
+        .intro p {
+            color: #66758b;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e1e7ef;
+            border-radius: 12px;
+            padding: 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 3px 12px rgba(23, 59, 112, 0.04);
+        }
+
+        .card h2 {
+            margin: 0 0 5px;
+            font-size: 21px;
+        }
+
+        .section-description {
+            color: #718096;
+            margin: 0 0 24px;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 16px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #cfd8e5;
+            border-radius: 7px;
+            font-size: 14px;
+            background: white;
+            color: #243247;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2868b2;
+            box-shadow: 0 0 0 3px rgba(40, 104, 178, 0.1);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 11px 16px;
+            border-radius: 7px;
+            transition: background 0.2s ease;
+        }
+
+        .primary-btn {
+            color: white;
+            background: #215ca3;
+            border: 1px solid #215ca3;
+        }
+
+        .primary-btn:hover {
+            background: #17487f;
+        }
+
+        .secondary-btn {
+            color: #215ca3;
+            background: #edf4fd;
+            border: 1px solid #cbdcf1;
+        }
+
+        .secondary-btn:hover {
+            background: #dceafc;
+        }
+
+        .danger-btn {
+            color: #b42332;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+        }
+
+        .danger-btn:hover {
+            background: #ffe4e6;
+        }
+
+        .message {
+            min-height: 20px;
+            margin: 12px 0 0;
+            font-size: 13px;
+        }
+
+        .message.success {
+            color: #16803d;
+        }
+
+        .message.error {
+            color: #c62828;
+        }
+
+        .info-panel {
+            background: #f1f6fc;
+            border: 1px solid #dce8f6;
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 26px;
+        }
+
+        .info-panel h3 {
+            font-size: 15px;
+            margin: 0 0 8px;
+        }
+
+        .info-panel p {
+            color: #52647b;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .section-heading .section-description {
+            margin-bottom: 0;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .search-box {
+            background: #f8fafd;
+            border: 1px solid #e2e9f2;
+            border-radius: 9px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .search-box h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .search-box p {
+            font-size: 13px;
+            color: #66758b;
+            margin: 0;
+            flex: 1;
+        }
+
+        .search-box .secondary-btn {
+            align-self: flex-start;
+        }
+
+        .results-section {
+            margin-top: 32px;
+            border-top: 1px solid #e1e7ef;
+            padding-top: 24px;
+        }
+
+        .results-section h3 {
+            margin: 0 0 5px;
+            font-size: 19px;
+        }
+
+        #results-count {
+            color: #718096;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #e1e7ef;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #edf3fa;
+            color: #364963;
+            text-align: left;
+            padding: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px 14px;
+            border-top: 1px solid #e8edf4;
+        }
+
+        tbody tr:hover {
+            background: #f8fafd;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #718096;
+            padding: 30px;
+        }
+
+        .name-controls {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .name-controls .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .update-panel {
+            margin-top: 24px;
+            padding: 20px;
+            background: #f8fafd;
+            border: 1px solid #e1e7ef;
+            border-radius: 8px;
+        }
+
+        .update-panel h3 {
+            margin: 0 0 15px;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        footer {
+            text-align: center;
+            color: #718096;
+            font-size: 13px;
+            padding: 16px 20px 32px;
+        }
+
+        @media (max-width: 800px) {
+            .form-grid,
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content,
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 500px) {
+            main {
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .name-controls {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .name-controls .form-group,
+            .name-controls button {
+                width: 100%;
+            }
+
+            header h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>User Management System</h1>
+                <p>Database Management Project 1</p>
+            </div>
+            <span class="header-badge">MySQL + Node.js</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Dashboard</h2>
+            <p>Register users, sign in, and search the database.</p>
+        </section>
+
+        <div class="form-grid">
+            <section class="card">
+                <h2>Register New User</h2>
+                <p class="section-description">Create a new account.</p>
+
+                <form id="register-form">
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label for="register-firstname">First Name</label>
+                            <input type="text" id="register-firstname" maxlength="50" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-lastname">Last Name</label>
+                            <input type="text" id="register-lastname" maxlength="50" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" maxlength="50" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" minlength="8" required>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label for="register-salary">Salary ($)</label>
+                            <input type="number" id="register-salary" min="0" max="9999999999.99" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="register-age">Age</label>
+                            <input type="number" id="register-age" min="0" max="150" step="1">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="primary-btn">Register User</button>
+                    <p id="register-message" class="message" role="status"></p>
+                </form>
+            </section>
+
+            <section class="card">
+                <h2>User Sign-In</h2>
+                <p class="section-description">Sign in to an existing account.</p>
+
+                <form id="signin-form">
+                    <div class="form-group">
+                        <label for="signin-username">Username</label>
+                        <input type="text" id="signin-username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signin-password">Password</label>
+                        <input type="password" id="signin-password" required>
+                    </div>
+
+                    <button type="submit" class="primary-btn">Sign In</button>
+                    <p id="signin-message" class="message" role="status"></p>
+                </form>
+
+                <div class="info-panel">
+                    <h3>Account Information</h3>
+                    <p>Successful sign-ins automatically update the user's last sign-in time in MySQL.</p>
+                    <p>Passwords are securely hashed before being stored in the database.</p>
+                </div>
+            </section>
+        </div>
+
+        <section class="card">
+            <div class="section-heading">
+                <div>
+                    <h2>User Search Dashboard</h2>
+                    <p class="section-description">Explore all eight required database searches.</p>
+                </div>
+                <button id="view-all-users-btn" class="secondary-btn">View All Users</button>
+            </div>
+
+            <div class="search-grid">
+                <div class="search-box">
+                    <h3>1. Search by Name</h3>
+                    <div class="input-grid">
+                        <input type="text" id="search-firstname" placeholder="First name">
+                        <input type="text" id="search-lastname" placeholder="Last name">
+                    </div>
+                    <button id="search-name-btn" class="secondary-btn">Search Name</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>2. Search by User ID</h3>
+                    <input type="text" id="search-userid" placeholder="Enter username">
+                    <button id="search-userid-btn" class="secondary-btn">Search User</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>3. Search by Salary Range</h3>
+                    <div class="input-grid">
+                        <input type="number" id="salary-min" min="0" placeholder="Minimum salary">
+                        <input type="number" id="salary-max" min="0" placeholder="Maximum salary">
+                    </div>
+                    <button id="search-salary-btn" class="secondary-btn">Search Salary</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>4. Search by Age Range</h3>
+                    <div class="input-grid">
+                        <input type="number" id="age-min" min="0" placeholder="Minimum age">
+                        <input type="number" id="age-max" min="0" placeholder="Maximum age">
+                    </div>
+                    <button id="search-age-btn" class="secondary-btn">Search Age</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>5. Registered After John</h3>
+                    <p>Find users registered after John's registration date.</p>
+                    <button id="search-after-john-btn" class="secondary-btn">Search Users</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>6. Never Signed In</h3>
+                    <p>Find registered users who have never signed in.</p>
+                    <button id="search-never-signed-btn" class="secondary-btn">Search Users</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>7. Same Registration Day as John</h3>
+                    <p>Find users who registered on the same date as John.</p>
+                    <button id="search-same-day-btn" class="secondary-btn">Search Users</button>
+                </div>
+
+                <div class="search-box">
+                    <h3>8. Registered Today</h3>
+                    <p>Find users who registered on today's date.</p>
+                    <button id="search-today-btn" class="secondary-btn">Search Users</button>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div class="section-heading">
+                    <div>
+                        <h3 id="results-title">Search Results</h3>
+                        <p id="results-count">Select a search to view results.</p>
+                    </div>
+                </div>
+
+                <p id="search-message" class="message" role="status"></p>
+
+                <div class="table-wrapper">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Salary</th>
+                                <th>Age</th>
+                                <th>Registration Date</th>
+                                <th>Last Sign-In</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" class="empty-state">No search performed yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <footer>
+        <p>Database Management Project 1</p>
+    </footer>
+
+    <script src="index.js"></script>
+</body>
+</html>

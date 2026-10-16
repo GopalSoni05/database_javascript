@@ -1,0 +1,27 @@
+CREATE TABLE Users (
+    username VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255) NOT NULL,
+    firstname VARCHAR(50) NOT NULL,
+    lastname VARCHAR(50) NOT NULL,
+    salary DECIMAL(12,2),
+    age INT,
+    registerday DATE NOT NULL,
+    signintime DATETIME NULL
+);
+
+CREATE USER 'john'@'localhost' IDENTIFIED BY '1234';
+
+GRANT ALL PRIVILEGES ON web_app.* TO 'john'@'localhost';
+
+UPDATE Users
+SET registerday = DATE_ADD(
+    (SELECT john_date FROM (
+        SELECT registerday AS john_date
+        FROM Users
+        WHERE username = 'john'
+    ) AS dates),
+    INTERVAL 1 DAY
+)
+WHERE username = 'bob';
+
+SHOW GRANTS FOR 'john'@'localhost';
