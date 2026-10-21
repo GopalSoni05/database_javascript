@@ -1,3 +1,18 @@
+-- DATABASE MANAGEMENT - PROJECT 1
+-- User Management System
+--
+-- SQL statements used by the application.
+--
+-- NOTE: Statements containing ? are parameterized queries
+-- executed by the Node.js backend. They are not intended
+-- to be run directly in phpMyAdmin as written.
+
+
+
+CREATE DATABASE IF NOT EXISTS web_app;
+
+USE web_app;
+
 CREATE TABLE Users (
     username VARCHAR(50) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
@@ -9,9 +24,153 @@ CREATE TABLE Users (
     signintime DATETIME NULL
 );
 
-CREATE USER 'john'@'localhost' IDENTIFIED BY '1234';
 
-GRANT ALL PRIVILEGES ON web_app.* TO 'john'@'localhost';
+
+-- MYSQL ACCOUNT SETUP (OPTIONAL)
+
+
+-- The database username and password are configured
+-- locally in Backend/.env.
+--
+-- Example account creation:
+--
+-- CREATE USER 'project1_app'@'localhost'
+-- IDENTIFIED BY 'CHOOSE_YOUR_OWN_PASSWORD';
+--
+-- GRANT SELECT, INSERT, UPDATE
+-- ON web_app.*
+-- TO 'project1_app'@'localhost';
+--
+-- Verify account permissions if needed:
+--
+-- SHOW GRANTS FOR 'project1_app'@'localhost';
+
+
+-- REQUIREMENT 1: REGISTER A NEW USER
+
+INSERT INTO Users
+(
+    username,
+    password,
+    firstname,
+    lastname,
+    salary,
+    age,
+    registerday,
+    signintime
+)
+VALUES (?, ?, ?, ?, ?, ?, CURDATE(), NULL);
+
+
+-- REQUIREMENT 2: USER SIGN-IN
+
+SELECT username, password
+FROM Users
+WHERE username = ?;
+
+-- After bcrypt verifies the password, update signintime.
+
+UPDATE Users
+SET signintime = NOW()
+WHERE username = ?;
+
+
+-- REQUIREMENT 3: SEARCH BY FIRST AND/OR LAST NAME
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE 1 = 1
+  AND firstname LIKE ?
+  AND lastname LIKE ?
+ORDER BY lastname, firstname;
+
+
+-- REQUIREMENT 4: SEARCH BY USER ID (USERNAME)
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE username = ?;
+
+
+-- REQUIREMENT 5: SEARCH BY SALARY RANGE
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE salary BETWEEN ? AND ?
+ORDER BY salary ASC;
+
+
+-- REQUIREMENT 6: SEARCH BY AGE RANGE
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE age BETWEEN ? AND ?
+ORDER BY age ASC;
+
+
+-- REQUIREMENT 7: REGISTERED AFTER JOHN
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE registerday > (
+    SELECT registerday
+    FROM Users
+    WHERE username = ?
+)
+ORDER BY registerday ASC;
+
+
+-- REQUIREMENT 8: USERS WHO NEVER SIGNED IN
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE signintime IS NULL
+ORDER BY username;
+
+
+-- REQUIREMENT 9: REGISTERED ON SAME DAY AS JOHN
+
+-- The backend supplies 'john' as the username parameter.
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE registerday = (
+    SELECT registerday
+    FROM Users
+    WHERE username = ?
+)
+ORDER BY username;
+
+
+-- REQUIREMENT 10: REGISTERED TODAY
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+WHERE registerday = CURDATE()
+ORDER BY username;
+
+
+-- ADDITIONAL FEATURE: VIEW ALL USERS
+
+SELECT username, firstname, lastname,
+       salary, age, registerday, signintime
+FROM Users
+ORDER BY username;
+
+
+
+-- OPTIONAL TEST DATA: CHANGE REGISTRATION DATES
+
+-- Original test statement from the project.
+-- Sets Bob's registration date one day after John's.
 
 UPDATE Users
 SET registerday = DATE_ADD(
@@ -24,4 +183,13 @@ SET registerday = DATE_ADD(
 )
 WHERE username = 'bob';
 
-SHOW GRANTS FOR 'john'@'localhost';
+
+-- Additional test statements used during local testing.
+
+-- UPDATE Users
+-- SET registerday = CURDATE() - INTERVAL 2 DAY
+-- WHERE username IN ('john', 'alice');
+
+-- UPDATE Users
+-- SET registerday = CURDATE() - INTERVAL 1 DAY
+-- WHERE username = 'mary';
