@@ -193,3 +193,56 @@ WHERE username = 'bob';
 -- UPDATE Users
 -- SET registerday = CURDATE() - INTERVAL 1 DAY
 -- WHERE username = 'mary';
+
+-- 1. CREATE THE NAMES TABLE
+
+CREATE TABLE IF NOT EXISTS names (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    date_added DATE
+);
+
+
+-- 2. INSERT SAMPLE RECORDS
+
+INSERT INTO names (name, date_added)
+VALUES
+('John', CURDATE()),
+('Alice', CURDATE()),
+('Bob', CURDATE() - INTERVAL 1 DAY);
+
+
+-- 3. VIEW ALL RECORDS
+
+SELECT * FROM names;
+
+
+-- 4. SEARCH FOR A SPECIFIC NAME
+
+SELECT * FROM names
+WHERE name = 'Alice';
+
+
+-- 5. FIND NAMES ADDED TODAY
+
+SELECT * FROM names
+WHERE date_added = CURDATE();
+
+
+-- 6. UPDATE AN EXISTING RECORD
+
+UPDATE names
+SET name = 'Robert'
+WHERE name = 'Bob';
+
+
+-- 7. DELETE A RECORD
+
+DELETE FROM names
+WHERE name = 'Robert';
+
+
+-- 8. COUNT THE TOTAL RECORDS
+
+SELECT COUNT(*) AS total_names
+FROM names;
